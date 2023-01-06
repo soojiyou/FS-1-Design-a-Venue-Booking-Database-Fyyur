@@ -30,6 +30,9 @@ db = SQLAlchemy(app)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:abc@localhost:5432/fyyur'
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 migrate = Migrate(app, db)
+
+# with app.app_context():
+#     db.create_all()
 # ----------------------------------------------------------------------------#
 # Models.
 # ----------------------------------------------------------------------------#
@@ -103,15 +106,6 @@ class Show(db.Model):
                     'start_time': self.start_time, 'artist_image_link': self.aritst_image_link,
                     'artist_name': self.artist_name, 'venue_name': self.venue_name}
         return f'<{show_obj}>'
-
-
-with app.app_context():
-    db.create_all()
-
-
-# mock_dataset.populate_venue_table()
-# mock_dataset.populate_artist_table()
-# mock_dataset.populate_show_table()
 
 
 # TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
