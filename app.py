@@ -403,14 +403,19 @@ def search_artists():
     # search for "band" should return "The Wild Sax Band".
     # res_data = []
     data = []
+    d1 = datetime.now()
+
     search_term = request.form.get('search_term')
     result = Artist.query.filter(
         Artist.name.ilike('%'+search_term+'%')).all()
+
     for item in result:
+        shows = Show.query.filter(
+            Show.artist_id == item.id, Show.start_time > d1).all()
         data.append({
             "id": item.id,
             "name": item.name,
-            "num_upcoming_shows": len(item.shows)
+            "num_upcoming_shows": len(shows)
         })
         res_data = {
             "count": len(data),
