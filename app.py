@@ -15,98 +15,20 @@ from forms import *
 from flask_migrate import Migrate
 import sys
 from datetime import datetime
+from models import Venue, Artist, Show
+from config import app
+from sqlalchemy import distinct
 
-# import mock_dataset
+
 # ----------------------------------------------------------------------------#
 # App Config.
 # ----------------------------------------------------------------------------#
 
-app = Flask(__name__)
-moment = Moment(app)
-app.config.from_object('config')
+# app = Flask(__name__)
+# moment = Moment(app)
+# app.config.from_object('config')
 db = SQLAlchemy(app)
-
-# TODO: connect to a local postgresql database
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:abc@localhost:5432/fyyur'
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-migrate = Migrate(app, db)
-
-# with app.app_context():
-#     db.create_all()
-# ----------------------------------------------------------------------------#
-# Models.
-# ----------------------------------------------------------------------------#
-
-
-class Venue(db.Model):
-    __tablename__ = 'Venue'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    address = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    image_link = db.Column(db.String(500))
-    facebook_link = db.Column(db.String(120))
-
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate
-    website = db.Column(db.String(120))
-    seeking_talent = db.Column(db.Boolean, default=False, nullable=False)
-    seeking_description = db.Column(db.String)
-    genres = db.Column(db.ARRAY(db.String))
-
-    def __repr__(self):
-        venue_obj = {'venue_id': self.id, 'venue_name': self.name,
-                     'city': self.city, 'state': self.state,
-                     'address': self.address, 'phone': self.phone,
-                     'image_link': self.image_link, 'facebook_link': self.facebook_link,
-                     'website': self.website, 'seeking_talent': self.seeking_talent,
-                     'seeking_description': self.seeking_description, 'genres': self.genres}
-        return f'<{venue_obj}>'
-
-
-class Artist(db.Model):
-    __tablename__ = 'Artist'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    genres = db.Column(db.ARRAY(db.String))
-    image_link = db.Column(db.String(500))
-    facebook_link = db.Column(db.String(120))
-
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate
-    website = db.Column(db.String(120))
-    seeking_talent = db.Column(db.Boolean, default=False, nullable=False)
-    seeking_description = db.Column(db.String)
-
-    def __repr__(self):
-        artist_obj = {'artist_id': self.id, 'artist_name': self.name,
-                      'city': self.city, 'state': self.state,
-                      'phone': self.phone, 'image_link': self.image_link,
-                      'facebook_link': self.facebook_link,
-                      'website': self.website, 'seeking_talent': self.seeking_talent,
-                      'seeking_description': self.seeking_description, 'genres': self.genres}
-        return f'<{artist_obj}>'
-
-
-class Show(db.Model):
-    __tablename__ = 'Show'
-    id = db.Column(db.Integer, primary_key=True)
-    artist_id = db.Column(db.Integer, db.ForeignKey(
-        'Artist.id'), nullable=False)
-    venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False)
-
-    def __repr__(self):
-        show_obj = {'show_id': self.id, 'date': self.date,
-                    'artist_id': self.artist_id, 'venue_id': self.venue_id,
-                    'start_time': self.start_time, 'artist_image_link': self.aritst_image_link,
-                    'artist_name': self.artist_name, 'venue_name': self.venue_name}
-        return f'<{show_obj}>'
-
+# migrate = Migrate(app, db)
 
 # TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
 
@@ -144,29 +66,36 @@ def index():
 #  Venues
 #  ----------------------------------------------------------------
 
+
 @app.route('/venues')
 def venues():
     # TODO: replace with real venues data.
     #       num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
     venue_res_data = []
-    venue_data = []
-    d1 = datetime.now()
 
-    venue_places = db.session.query(Venue.name, Venue.city, Venue.state)
+    d1 = datetime.now()
+    venue_places = db.session.query(
+        distinct(Venue.city), Venue.state, Venue.name).all()
+
+    # venue_places = db.session.query(
+    #     Venue.city, Venue.state, Venue.name).all()
     for place in venue_places:
-        result = Venue.query.filter(Venue.state == place.state).filter(
-            Venue.city == place.city).all()
+        city = place[0]
+        state = place[1]
+        result = Venue.query.filter(Venue.state == state).filter(
+            Venue.city == city).all()
+        venue_data = []
         for venue in result:
             venue_data.append({
                 'id': venue.id,
                 'name': venue.name,
                 'num_upcoming_shows': Show.query.filter(Show.start_time > d1).count()
             })
-            venue_res_data.append({
-                'city': place.city,
-                'state': place.state,
-                'venues': venue_data
-            })
+        venue_res_data.append({
+            'city': city,
+            'state': state,
+            'venues': venue_data
+        })
 
     return render_template('pages/venues.html',  areas=venue_res_data)
 
