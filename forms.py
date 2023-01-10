@@ -3,6 +3,7 @@ from flask_wtf import Form
 from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField
 from wtforms.validators import DataRequired, AnyOf, URL, Regexp, ValidationError
 import re
+import phonenumbers
 
 # def validate_phone(form, field):
 #     if not re.search(r"^[0-9]*$", field.data):
@@ -10,8 +11,19 @@ import re
 
 
 def find_phone_numbers(text):
-    phones = re.findall('(?:\+ *)?\d[\d\- ]{7,}\d', text)
-    return [phone.replace('-', '').replace(' ', '') for phone in phones]
+    clean_phone_number = re.sub('[^0-9]+', '', text)
+    if not re.search(r"^[0-9]*$", text):
+        raise ValidationError("Phone number should only contain digits.")
+    else:
+        formatted_phone_number = re.sub(
+            "(\d)(?=(\d{3})+(?!\d))", r"\1-", "%d" % int(clean_phone_number[:-1])) + clean_phone_number[-1]
+        return formatted_phone_number
+
+    # if not re.search(r"^[0-9]*$", text.data):
+    #     raise ValidationError("Phone number should only contain digits.")
+    # else:
+    #     phones = re.findall('(?:\+ *)?\d[\d\- ]{7,}\d', text)
+    #     return [phone.replace('-', '').replace(' ', '') for phone in phones]
 
 
 class ShowForm(Form):
@@ -95,7 +107,8 @@ class VenueForm(Form):
         'address', validators=[DataRequired()]
     )
     phone = StringField(
-        'phone', validators=[find_phone_numbers]
+        'phone', validators=[DataRequired()]
+        # 'phone', validators=[DataRequired(), find_phone_numbers]
     )
     image_link = StringField(
         'image_link'
@@ -204,7 +217,8 @@ class ArtistForm(Form):
     )
     phone = StringField(
         # TODO implement validation logic for state
-        'phone', validators=[find_phone_numbers]
+        'phone', validators=[DataRequired()]
+        # 'phone', validators=[DataRequired(), find_phone_numbers]
     )
     image_link = StringField(
         'image_link'

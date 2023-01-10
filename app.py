@@ -53,6 +53,11 @@ def format_datetime(value, format='medium'):
 
 app.jinja_env.filters['datetime'] = format_datetime
 
+
+# def phone_validator(num):
+#     parsed = phonenumbers.parse(num, "US")
+#     if not phonenumbers.is_valid_number(parsed):
+#         raise ValidationError('Must be a valid US phone number.')
 # ----------------------------------------------------------------------------#
 # Controllers.
 # ----------------------------------------------------------------------------#
@@ -207,31 +212,19 @@ def create_venue_submission():
     # error = False
 
     # TODO: insert form data as a new Venue record in the db, instead
-    # new_venue = Venue(name=request.form.get('name'),
-    #                   city=request.form.get('city'),
-    #                   state=request.form.get('state'),
-    #                   address=request.form.get('address'),
-    #                   phone=request.form.get('phone'),
-    #                   image_link=request.form.get('image_link'),
-    #                   facebook_link=request.form.get('facebook_link'),
-    #                   website=request.form.get('website_link'),
-    #                   seeking_talent=request.form.get(
-    #     'seeking_talent'),
-    #     seeking_description=request.form.get(
-    #     'seeking_description'),
-    #     genres=request.form.getlist('genres'))
+
     try:
         name = request.form.get('name')
         city = request.form.get('city')
         state = request.form.get('state')
         address = request.form.get('address')
         phone = request.form.get('phone')
+        formated_phone = find_phone_numbers(phone)
         image_link = request.form.get('image_link')
         facebook_link = request.form.get('facebook_link')
         website = request.form.get('website_link')
         seeking_talent = True if request.form.get(
             'seeking_talent') == 'Yes' else False
-        # seeking_talent = request.form.get('seeking_talent')
         seeking_description = request.form.get('seeking_description')
         genres = request.form.getlist('genres')
 
@@ -239,7 +232,7 @@ def create_venue_submission():
                           city=city,
                           state=state,
                           address=address,
-                          phone=phone,
+                          phone=formated_phone,
                           image_link=image_link,
                           facebook_link=facebook_link,
                           website=website,
@@ -278,19 +271,21 @@ def create_venue_submission():
 def delete_venue(venue_id):
     # TODO: Complete this endpoint for taking a venue_id, and using
     # SQLAlchemy ORM to delete a record. Handle cases where the session commit could fail.
-    venue = Venue.query.get(venue_id)
+    # venue = db.session.query(Venue).get(venue_id)
 
     try:
-        db.session.delete(venue)
+        db.session.query(Venue).filter_by(id=venue_id).delete()
         db.session.commit()
     except:
+
         db.session.rollback()
         print(sys.exc_info())
+
     finally:
         db.session.close()
 
     return render_template('pages/home.html')
-
+    # return jsonify({"redirect_to": url_for('search_venues')})
     # BONUS CHALLENGE: Implement a button to delete a Venue on a Venue Page, have it so that
     # clicking that button delete it from the db then redirect the user to the homepage
 
@@ -301,17 +296,7 @@ def delete_venue(venue_id):
 @app.route('/artists')
 def artists():
     # TODO: replace with real data returned from querying the database
-    # data = [{
-    #     "id": 4,
-    #     "name": "Guns N Petals",
-    # }, {
-    #     "id": 5,
-    #     "name": "Matt Quevedo",
-    # }, {
-    #     "id": 6,
-    #     "name": "The Wild Sax Band",
-    # }]
-    # return render_template('pages/artists.html', artists=data)
+
     artist_res_data = []
     # artists_data = []
     artists = db.session.query(Artist).all()
@@ -450,37 +435,27 @@ def edit_artist_submission(artist_id):
     # TODO: take values from the form submitted, and update existing
     # artist record with ID <artist_id> using the new attributes
     try:
-        edited_artist = Artist.query.get(artist_id)
+        edited_artist = db.session.query(Artist).get(artist_id)
 
-        name = request.form.get('name')
-        city = request.form.get('city')
-        state = request.form.get('state')
         phone = request.form.get('phone')
-        image_link = request.form.get('image_link')
-        facebook_link = request.form.get('facebook_link')
-        website = request.form.get('website_link')
-        seeking_talent = True if request.form.get(
-            'seeking_talent') == 'Yes' else False
-        # seeking_talent = request.form.get('seeking_talent')
-        seeking_description = request.form.get('seeking_description')
-        genres = request.form.getlist('genres')
+        formated_phone = find_phone_numbers(phone)
 
-        edited_artist.name = name,
-        edited_artist.city = city,
-        edited_artist.state = state,
-        edited_artist.phone = phone,
-        edited_artist.image_link = image_link,
-        edited_artist.facebook_link = facebook_link,
-        edited_artist.website = website,
-        edited_artist.seeking_talent = seeking_talent,
-        edited_artist.seeking_description = seeking_description,
-        edited_artist.genres = genres
+        edited_artist.name = request.form.get('name')
+        edited_artist.city = request.form.get('city')
+        edited_artist.state = request.form.get('state')
+        edited_artist.phone = formated_phone
+        edited_artist.image_link = request.form.get('image_link')
+        edited_artist.facebook_link = request.form.get('facebook_link')
+        edited_artist.website = request.form.get('website_link')
+        edited_artist.seeking_talent = True if request.form.get(
+            'seeking_talent') == 'Yes' else False
+        edited_artist.seeking_description = request.form.get(
+            'seeking_description')
+        edited_artist.genres = request.form.getlist('genres')
 
         # TODO: modify data to be the data object returned from db insertion
-        db.session.add(edited_artist)
         db.session.commit()
-        db.session.refresh(edited_artist)
-        # on successful db insert, flash success
+
         print(f'Artist ' + request.form['name'] + ' was successfully updated!')
     except:
         # TODO: on unsuccessful db insert, flash an error instead.
@@ -498,6 +473,7 @@ def edit_artist_submission(artist_id):
         db.session.close()
 
     return redirect(url_for('show_artist', artist_id=artist_id))
+    # return render_template('pages/show_artist.html', artist=edited_artist)
 
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
@@ -534,48 +510,30 @@ def edit_venue(venue_id):
 
 @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
 def edit_venue_submission(venue_id):
-    # TODO: take values from the form submitted, and update existing
-    # venue record with ID <venue_id> using the new attributes
+
     try:
-        edited_venue = Venue.query.get(venue_id)
-
-        name = request.form.get('name')
-        city = request.form.get('city')
-        state = request.form.get('state')
-        address = request.form.get('address')
+        edited_venue = db.session.query(Venue).get(venue_id)
         phone = request.form.get('phone')
-        image_link = request.form.get('image_link')
-        facebook_link = request.form.get('facebook_link')
-        website = request.form.get('website_link')
-        seeking_talent = True if request.form.get(
+        formated_phone = find_phone_numbers(phone)
+        edited_venue.name = request.form.get('name')
+        edited_venue.city = request.form.get('city')
+        edited_venue.state = request.form.get('state')
+        edited_venue.address = request.form.get('address')
+        edited_venue.phone = formated_phone
+        edited_venue.image_link = request.form.get('image_link')
+        edited_venue.facebook_link = request.form.get('facebook_link')
+        edited_venue.website = request.form.get('website_link')
+        edited_venue.seeking_talent = True if request.form.get(
             'seeking_talent') == 'Yes' else False
-        seeking_description = request.form.get('seeking_description')
-        genres = request.form.getlist('genres')
+        edited_venue.seeking_description = request.form.get(
+            'seeking_description')
+        edited_venue.genres = request.form.getlist('genres')
 
-        edited_venue.name = name,
-        edited_venue.city = city,
-        edited_venue.state = state,
-        edited_venue.address = address,
-        edited_venue.phone = phone,
-        edited_venue.image_link = image_link,
-        edited_venue.facebook_link = facebook_link,
-        edited_venue.website = website,
-        edited_venue.seeking_talent = seeking_talent,
-        edited_venue.seeking_description = seeking_description,
-        edited_venue.genres = genres
-
-        # TODO: modify data to be the data object returned from db insertion
-        db.session.add(edited_venue)
         db.session.commit()
-        db.session.refresh(edited_venue)
-        # on successful db insert, flash success
-        print(f'Venue ' + request.form['name'] + ' was successfully updated!')
+        print(f'Venue ' + request.form.get("name") +
+              ' was successfully updated!')
     except:
-        # TODO: on unsuccessful db insert, flash an error instead.
-        # e.g., flash('An error occurred. Venue ' + data.name + ' could not be listed.')
-        # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
-        db.session.rollback()
-        # error = True
+        # db.session.rollback()
         print(sys.exc_info())
         flash(
             "An error occurred. Venue "
@@ -584,8 +542,9 @@ def edit_venue_submission(venue_id):
         )
     finally:
         db.session.close()
+        return redirect(url_for('show_venue', venue_id=venue_id))
+        # return render_template('pages/show_venue.html', venue=edited_venue)
 
-    return redirect(url_for('show_venue', venue_id=venue_id))
 
 #  Create Artist
 #  ----------------------------------------------------------------
@@ -606,6 +565,7 @@ def create_artist_submission():
         city = request.form.get('city')
         state = request.form.get('state')
         phone = request.form.get('phone')
+        formated_phone = find_phone_numbers(phone)
         image_link = request.form.get('image_link')
         facebook_link = request.form.get('facebook_link')
         website = request.form.get('website_link')
@@ -618,7 +578,7 @@ def create_artist_submission():
         new_artist = Artist(name=name,
                             city=city,
                             state=state,
-                            phone=phone,
+                            phone=formated_phone,
                             image_link=image_link,
                             facebook_link=facebook_link,
                             website=website,
