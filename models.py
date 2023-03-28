@@ -26,7 +26,7 @@ from config import app
 
 
 db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+# migrate = Migrate(app, db)
 
 
 class Venue(db.Model):
