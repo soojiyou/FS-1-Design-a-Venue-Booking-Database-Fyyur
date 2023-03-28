@@ -141,14 +141,7 @@ def show_venue(venue_id):
     # with_entities(): Return a new Query replacing the SELECT list with the given entities.
     venue_data = Venue.query.get(venue_id)
     d1 = datetime.now()
-    # past = Show.query.join(Artist, Show.artist_id == Artist.id).add_columns(
-    #     Artist.id, Artist.name, Artist.image_link, Show.start_time).filter(
-    #     Show.venue_id == venue_id).filter(Show.start_time <= d1).all()
-    # upcomming = Show.query.join(Artist, Show.artist_id == Artist.id).add_columns(
-    #     Artist.id, Artist.name, Artist.image_link, Show.start_time).filter(
-    #     Show.venue_id == venue_id).filter(Show.start_time > d1).all()
 
-   # shows = Show.query.filter_by(venue_id=venue_id)
     past_shows = []
     upcomming_shows = []
     past = Show.query.join(Artist, Show.artist_id == Artist.id).filter(
