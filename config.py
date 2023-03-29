@@ -24,4 +24,4 @@ SQLALCHEMY_DATABASE_URI = 'postgres://ugmqneixdnggll:68b59e32daabd81609276787159
 
 
 # SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:abc@localhost:5432/fyyur'
-# app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
