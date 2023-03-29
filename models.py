@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from forms import *
 from flask_migrate import Migrate
 from config import app
+import click
+from flask.cli import with_appcontext
 
 
 # ----------------------------------------------------------------------------#
@@ -18,8 +20,10 @@ from config import app
 # # TODO: connect to a local postgresql database
 # migrate = Migrate(app, db)
 
-# # with app.app_context():
-#     db.create_all()
+@click.command(name='create_tables')
+@with_appcontext
+def create_tables():
+    db.create_all()
 # ----------------------------------------------------------------------------#
 # Models.
 # ----------------------------------------------------------------------------#
