@@ -16,13 +16,13 @@ from flask_migrate import Migrate
 import sys
 from datetime import datetime
 from models import Venue, Artist, Show
-from config import app
+# from config import app
 from sqlalchemy import distinct
 
 from commands import create_tables
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+# db = SQLAlchemy(app)
+# migrate = Migrate(app, db)
 
 # ----------------------------------------------------------------------------#
 # App Config.
@@ -35,8 +35,21 @@ migrate = Migrate(app, db)
 
 # migrate = Migrate(app, db)
 
-# TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
+app = Flask(__name__)
 
+ENV = 'dev'
+
+if ENV == 'dev':
+    app.debug = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:abc@localhost:5432/fyyur'
+else:
+    app.debug = False
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://sjofxezngemthe:01e4bbe6276660d0f7b0c5bb08542b8110d45cbcfc8b3d26fb28173f005a428a@ec2-52-54-200-216.compute-1.amazonaws.com:5432/d790t0rv3cfqhg'
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 # ----------------------------------------------------------------------------#
 # Filters.
 # ----------------------------------------------------------------------------#

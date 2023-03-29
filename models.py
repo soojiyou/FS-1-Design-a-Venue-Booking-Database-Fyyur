@@ -3,7 +3,7 @@ from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from forms import *
 from flask_migrate import Migrate
-from config import app
+# from config import app
 
 
 from flask.cli import FlaskGroup
@@ -31,8 +31,8 @@ from flask_migrate import Migrate, MigrateCommand
 # ----------------------------------------------------------------------------#
 
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+# db = SQLAlchemy(app)
+# migrate = Migrate(app, db)
 
 
 # @click.command(name='create_tables')
