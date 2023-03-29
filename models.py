@@ -20,10 +20,7 @@ from flask.cli import with_appcontext
 # # TODO: connect to a local postgresql database
 # migrate = Migrate(app, db)
 
-@click.command(name='create_tables')
-@with_appcontext
-def create_tables():
-    db.create_all()
+
 # ----------------------------------------------------------------------------#
 # Models.
 # ----------------------------------------------------------------------------#
@@ -31,6 +28,12 @@ def create_tables():
 
 db = SQLAlchemy(app)
 # migrate = Migrate(app, db)
+
+
+@click.command(name='create_tables')
+@with_appcontext
+def create_tables():
+    db.create_all()
 
 
 class Venue(db.Model):
