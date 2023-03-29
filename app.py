@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------#
 import os
 import json
-# from dateutil.parser import parse, parserinfo
+from dateutil.parser import parse, parserinfo
 import babel
 from flask import Flask, render_template, request, Response, flash, redirect, url_for, abort, jsonify
 # from flask_moment import Moment
@@ -36,7 +36,7 @@ from sqlalchemy import distinct
 
 app = Flask(__name__)
 
-ENV = 'prod'
+ENV = 'dev'
 
 if ENV == 'dev':
     app.debug = True
@@ -54,21 +54,16 @@ migrate = Migrate(app, db)
 # ----------------------------------------------------------------------------#
 
 
-# def format_datetime(value, format='medium'):
-#     # date = dateutil.parser.parse(value)
-#     # if format == 'full':
-#     #     format = "EEEE MMMM, d, y 'at' h:mma"
-#     # elif format == 'medium':
-#     #     format = "EE MM, dd, y h:mma"
+def format_datetime(value, format='medium'):
 
-#     if isinstance(value, str):
-#         date = parse(value)
-#     else:
-#         date = value
-#     return babel.dates.format_datetime(date, format, locale='en')
+    if isinstance(value, str):
+        date = parse(value)
+    else:
+        date = value
+    return babel.dates.format_datetime(date, format, locale='en')
 
 
-# app.jinja_env.filters['datetime'] = format_datetime
+app.jinja_env.filters['datetime'] = format_datetime
 
 # def format_datetime(value, format='medium'):
 #     if isinstance(value, str):
@@ -79,15 +74,15 @@ migrate = Migrate(app, db)
 
 
 # app.jinja_env.filters['datetime'] = format_datetime
-def format_datetime(value, format='medium'):
-    if isinstance(value, str):
-        date = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
-    else:
-        date = value
-    return babel.dates.format_datetime(date, format, locale='en')
+# def format_datetime(value, format='medium'):
+#     if isinstance(value, str):
+#         date = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+#     else:
+#         date = value
+#     return babel.dates.format_datetime(date, format, locale='en')
 
 
-app.jinja_env.filters['datetime'] = format_datetime
+# app.jinja_env.filters['datetime'] = format_datetime
 
 # def phone_validator(num):
 #     parsed = phonenumbers.parse(num, "US")
