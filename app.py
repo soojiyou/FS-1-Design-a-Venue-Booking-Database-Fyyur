@@ -4,7 +4,7 @@
 import os
 import json
 # from dateutil.parser import parse, parserinfo
-# import babel
+import babel
 from flask import Flask, render_template, request, Response, flash, redirect, url_for, abort, jsonify
 # from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
@@ -18,7 +18,7 @@ from datetime import datetime
 from models import Venue, Artist, Show
 # from config import app
 from sqlalchemy import distinct
-import arrow
+# import arrow
 
 # db = SQLAlchemy(app)
 # migrate = Migrate(app, db)
@@ -70,16 +70,24 @@ migrate = Migrate(app, db)
 
 # app.jinja_env.filters['datetime'] = format_datetime
 
+# def format_datetime(value, format='medium'):
+#     if isinstance(value, str):
+#         date = arrow.get(value)
+#     else:
+#         date = arrow.get(value)
+#     return date.format(format)
+
+
+# app.jinja_env.filters['datetime'] = format_datetime
 def format_datetime(value, format='medium'):
     if isinstance(value, str):
-        date = arrow.get(value)
+        date = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
     else:
-        date = arrow.get(value)
-    return date.format(format)
+        date = value
+    return babel.dates.format_datetime(date, format, locale='en')
 
 
 app.jinja_env.filters['datetime'] = format_datetime
-
 
 # def phone_validator(num):
 #     parsed = phonenumbers.parse(num, "US")
