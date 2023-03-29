@@ -1,8 +1,7 @@
 import click
 from flask.cli import with_appcontext
 
-from config import db
-from models import Venue, Artist, Show
+from models import db, Venue, Artist, Show
 
 
 @click.command(name='create_tables')
