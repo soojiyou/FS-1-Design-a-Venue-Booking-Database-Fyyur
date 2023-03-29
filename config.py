@@ -1,30 +1,8 @@
 import os
 from flask import Flask
 from flask_moment import Moment
-from models import db
 
-import click
-from flask.cli import with_appcontext
 from wsgi import app
-
-
-@click.command(name='create_tables')
-@with_appcontext
-def create_tables():
-    db.create_all()
-
-
-def create_app(config_file='settings.py'):
-    app = Flask(__name__)
-
-    app.config.from_pyfile(config_file)
-
-    db.init_app(app)
-
-    app.cli.add_command(create_tables)
-
-    return app
-
 
 # settings
 SECRET_KEY = os.urandom(32)

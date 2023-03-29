@@ -19,6 +19,8 @@ from models import Venue, Artist, Show
 from wsgi import app
 from sqlalchemy import distinct
 
+from commands import create_tables
+
 
 # ----------------------------------------------------------------------------#
 # App Config.
@@ -35,6 +37,18 @@ db = SQLAlchemy(app)
 # ----------------------------------------------------------------------------#
 # Filters.
 # ----------------------------------------------------------------------------#
+
+
+def create_app(config_file='config.py'):
+    app = Flask(__name__)
+
+    app.config.from_pyfile(config_file)
+
+    db.init_app(app)
+
+    app.cli.add_command(create_tables)
+
+    return app
 
 
 def format_datetime(value, format='medium'):
