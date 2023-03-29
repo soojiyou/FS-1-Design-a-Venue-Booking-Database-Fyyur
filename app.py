@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------#
 import os
 import json
-import dateutil.parser
+from dateutil.parser import parse, parserinfo
 import babel
 from flask import Flask, render_template, request, Response, flash, redirect, url_for, abort, jsonify
 from flask_moment import Moment
@@ -63,7 +63,7 @@ def format_datetime(value, format='medium'):
     #     format = "EE MM, dd, y h:mma"
 
     if isinstance(value, str):
-        date = dateutil.parser.parse(value)
+        date = parse(value)
     else:
         date = value
     return babel.dates.format_datetime(date, format, locale='en')
