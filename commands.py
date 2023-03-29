@@ -1,7 +1,7 @@
 import click
 from flask.cli import with_appcontext
 
-from models import db
+from config import db
 from models import Venue, Artist, Show
 
 

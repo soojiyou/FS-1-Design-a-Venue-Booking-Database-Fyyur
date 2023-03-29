@@ -16,10 +16,11 @@ from flask_migrate import Migrate
 import sys
 from datetime import datetime
 from models import Venue, Artist, Show
-from wsgi import app
+# from wsgi import app
 from sqlalchemy import distinct
 
 from commands import create_tables
+from config import db
 
 
 # ----------------------------------------------------------------------------#
@@ -29,7 +30,7 @@ from commands import create_tables
 # app = Flask(__name__)
 # moment = Moment(app)
 # app.config.from_object('config')
-db = SQLAlchemy(app)
+# db = SQLAlchemy(app)
 # migrate = Migrate(app, db)
 
 # TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.

@@ -3,6 +3,8 @@ from flask import Flask
 from flask_moment import Moment
 
 from wsgi import app
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
 
 # settings
 SECRET_KEY = os.urandom(32)
