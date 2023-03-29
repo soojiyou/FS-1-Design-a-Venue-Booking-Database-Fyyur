@@ -17,8 +17,10 @@ app.config.from_object('config')
 
 # Connect to the database
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
+
+SQLALCHEMY_DATABASE_URI = 'postgres://ugmqneixdnggll:68b59e32daabd81609276787159cf240f3dc80d37132e57527e972e40e3c962c@ec2-3-230-24-12.compute-1.amazonaws.com:5432/d5sljav4fnv13u'
 
 
 # SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:abc@localhost:5432/fyyur'
