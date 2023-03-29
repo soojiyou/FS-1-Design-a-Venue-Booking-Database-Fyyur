@@ -22,6 +22,7 @@ from sqlalchemy import distinct
 from commands import create_tables
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 # ----------------------------------------------------------------------------#
 # App Config.
