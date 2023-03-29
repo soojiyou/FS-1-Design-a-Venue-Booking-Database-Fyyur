@@ -7,7 +7,6 @@ from models import db
 
 
 migrate = Migrate(app, db)
-# manager = Manager(app)
 manager = FlaskGroup(app)
 
 manager.add_command('db', MigrateCommand)

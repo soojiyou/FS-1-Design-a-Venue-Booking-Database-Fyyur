@@ -5,6 +5,10 @@ from forms import *
 from flask_migrate import Migrate
 from config import app
 
+
+from flask.cli import FlaskGroup
+from flask_migrate import Migrate, MigrateCommand
+
 # import click
 # from flask.cli import with_appcontext
 
@@ -29,7 +33,13 @@ from config import app
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+manager = FlaskGroup(app)
 
+manager.add_command('db', MigrateCommand)
+
+
+if __name__ == '__main__':
+    manager()
 
 # @click.command(name='create_tables')
 # @with_appcontext
