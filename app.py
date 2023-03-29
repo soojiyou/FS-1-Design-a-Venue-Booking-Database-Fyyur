@@ -16,7 +16,7 @@ from flask_migrate import Migrate
 import sys
 from datetime import datetime
 from models import Venue, Artist, Show
-from config import app
+from wsgi import app
 from sqlalchemy import distinct
 
 

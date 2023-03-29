@@ -3,9 +3,9 @@ from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from forms import *
 from flask_migrate import Migrate
-from config import app
-import click
-from flask.cli import with_appcontext
+from wsgi import app
+# import click
+# from flask.cli import with_appcontext
 
 
 # ----------------------------------------------------------------------------#
@@ -30,10 +30,10 @@ db = SQLAlchemy(app)
 # migrate = Migrate(app, db)
 
 
-@click.command(name='create_tables')
-@with_appcontext
-def create_tables():
-    db.create_all()
+# @click.command(name='create_tables')
+# @with_appcontext
+# def create_tables():
+#     db.create_all()
 
 
 class Venue(db.Model):
