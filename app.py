@@ -16,12 +16,12 @@ from flask_migrate import Migrate
 import sys
 from datetime import datetime
 from models import Venue, Artist, Show
-# from wsgi import app
+from config import app
 from sqlalchemy import distinct
 
 from commands import create_tables
-from config import db
 
+db = SQLAlchemy(app)
 
 # ----------------------------------------------------------------------------#
 # App Config.
@@ -38,21 +38,6 @@ from config import db
 # ----------------------------------------------------------------------------#
 # Filters.
 # ----------------------------------------------------------------------------#
-
-
-def create_app(config_file='config.py'):
-    app = Flask(__name__)
-
-    app.config.from_pyfile(config_file)
-
-    db.init_app(app)
-
-    app.cli.add_command(create_tables)
-
-    return app
-
-
-app = create_app()
 
 
 def format_datetime(value, format='medium'):
