@@ -41,6 +41,7 @@ ENV = 'dev'
 if ENV == 'dev':
     app.debug = True
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:abc@localhost:5432/fyyur'
+    app.config['SECRET_KEY'] = os.urandom(32)
 else:
     app.debug = False
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://sjofxezngemthe:01e4bbe6276660d0f7b0c5bb08542b8110d45cbcfc8b3d26fb28173f005a428a@ec2-52-54-200-216.compute-1.amazonaws.com:5432/d790t0rv3cfqhg'
