@@ -52,6 +52,9 @@ def create_app(config_file='config.py'):
     return app
 
 
+app = create_app()
+
+
 def format_datetime(value, format='medium'):
     # date = dateutil.parser.parse(value)
     # if format == 'full':
