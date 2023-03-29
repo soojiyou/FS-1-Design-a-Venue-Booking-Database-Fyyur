@@ -3,7 +3,7 @@ from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from forms import *
 from flask_migrate import Migrate
-from wsgi import app
+from app import app
 # import click
 # from flask.cli import with_appcontext
 
