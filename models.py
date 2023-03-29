@@ -33,13 +33,7 @@ from flask_migrate import Migrate, MigrateCommand
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-manager = FlaskGroup(app)
 
-manager.add_command('db', MigrateCommand)
-
-
-if __name__ == '__main__':
-    manager()
 
 # @click.command(name='create_tables')
 # @with_appcontext
