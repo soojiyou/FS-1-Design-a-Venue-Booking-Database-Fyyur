@@ -32,6 +32,7 @@ migrate = Migrate(app, db)
 # moment = Moment(app)
 # app.config.from_object('config')
 # db = SQLAlchemy(app)
+
 # migrate = Migrate(app, db)
 
 # TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
