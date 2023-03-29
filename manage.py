@@ -3,8 +3,9 @@ from flask.cli import FlaskGroup
 from flask_migrate import Migrate, MigrateCommand
 from config import app
 from flask_sqlalchemy import SQLAlchemy
-# from models import db
-db = SQLAlchemy(app)
+from models import db
+
+
 migrate = Migrate(app, db)
 # manager = Manager(app)
 manager = FlaskGroup(app)
