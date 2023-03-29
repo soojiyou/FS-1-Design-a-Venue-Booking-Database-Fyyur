@@ -4,7 +4,7 @@
 import os
 import json
 # from dateutil.parser import parse, parserinfo
-import babel
+# import babel
 from flask import Flask, render_template, request, Response, flash, redirect, url_for, abort, jsonify
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
