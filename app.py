@@ -18,8 +18,7 @@ from datetime import datetime
 from models import Venue, Artist, Show
 # from config import app
 from sqlalchemy import distinct
-
-from commands import create_tables
+import arrow
 
 # db = SQLAlchemy(app)
 # migrate = Migrate(app, db)
@@ -55,18 +54,28 @@ migrate = Migrate(app, db)
 # ----------------------------------------------------------------------------#
 
 
-def format_datetime(value, format='medium'):
-    # date = dateutil.parser.parse(value)
-    # if format == 'full':
-    #     format = "EEEE MMMM, d, y 'at' h:mma"
-    # elif format == 'medium':
-    #     format = "EE MM, dd, y h:mma"
+# def format_datetime(value, format='medium'):
+#     # date = dateutil.parser.parse(value)
+#     # if format == 'full':
+#     #     format = "EEEE MMMM, d, y 'at' h:mma"
+#     # elif format == 'medium':
+#     #     format = "EE MM, dd, y h:mma"
 
+#     if isinstance(value, str):
+#         date = parse(value)
+#     else:
+#         date = value
+#     return babel.dates.format_datetime(date, format, locale='en')
+
+
+# app.jinja_env.filters['datetime'] = format_datetime
+
+def format_datetime(value, format='medium'):
     if isinstance(value, str):
-        date = parse(value)
+        date = arrow.get(value)
     else:
-        date = value
-    return babel.dates.format_datetime(date, format, locale='en')
+        date = arrow.get(value)
+    return date.format(format)
 
 
 app.jinja_env.filters['datetime'] = format_datetime
