@@ -9,6 +9,7 @@ from flask_migrate import Migrate
 from flask.cli import FlaskGroup
 from flask_migrate import Migrate, MigrateCommand
 
+
 # import click
 # from flask.cli import with_appcontext
 
@@ -31,8 +32,7 @@ from flask_migrate import Migrate, MigrateCommand
 # ----------------------------------------------------------------------------#
 
 
-# db = SQLAlchemy(app)
-# migrate = Migrate(app, db)
+db = SQLAlchemy()
 
 
 # @click.command(name='create_tables')
