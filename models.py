@@ -3,13 +3,8 @@ from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from forms import *
 from flask_migrate import Migrate
-# from config import app
-
-
-from flask.cli import FlaskGroup
-from flask_migrate import Migrate, MigrateCommand
-
-
+from config import app
+import os
 # import click
 # from flask.cli import with_appcontext
 
@@ -27,12 +22,37 @@ from flask_migrate import Migrate, MigrateCommand
 # migrate = Migrate(app, db)
 
 
+# database_path = config.SQLALCHEMY_DATABASE_URI
+
+db = SQLAlchemy()
+
+"""
+setup_db(app)
+    binds a flask application and a SQLAlchemy service
+"""
+
+
+def setup_db(app):
+    ENV = 'dev'
+
+    if ENV == 'dev':
+        app.debug = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:abc@localhost:5432/fyyur'
+        app.config['SECRET_KEY'] = os.urandom(32)
+    else:
+        app.debug = False
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    db.app = app
+    db.init_app(app)
+    db.create_all()
+
+
 # ----------------------------------------------------------------------------#
 # Models.
 # ----------------------------------------------------------------------------#
-
-
-db = SQLAlchemy()
 
 
 # @click.command(name='create_tables')
