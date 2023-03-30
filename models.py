@@ -33,7 +33,7 @@ setup_db(app)
 
 
 def setup_db(app):
-    ENV = 'dev'
+    ENV = 'prod'
 
     if ENV == 'dev':
         app.debug = True
