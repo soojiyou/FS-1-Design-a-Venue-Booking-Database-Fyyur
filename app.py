@@ -61,6 +61,7 @@ def setup_db(app):
     else:
         app.debug = False
         app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+        app.config['SECRET_KEY'] = os.urandom(32)
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
