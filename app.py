@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------------#
 # Imports
 # ----------------------------------------------------------------------------#
-import json
+import os
 from dateutil.parser import parse
 import babel
 from flask import Flask, render_template, request, Response, flash, redirect, url_for, abort, jsonify
@@ -13,7 +13,7 @@ from forms import *
 from flask_migrate import Migrate
 import sys
 from datetime import datetime
-from models import setup_db, Venue, Artist, Show
+from models import Venue, Artist, Show
 from config import app
 from sqlalchemy import distinct
 # import arrow
@@ -49,6 +49,24 @@ def format_datetime(value, format='medium'):
 
 
 # app.jinja_env.filters['datetime'] = format_datetime
+
+
+def setup_db(app):
+    ENV = 'prod'
+
+    if ENV == 'dev':
+        app.debug = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:abc@localhost:5432/fyyur'
+        app.config['SECRET_KEY'] = os.urandom(32)
+    else:
+        app.debug = False
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    db.app = app
+    db.init_app(app)
+    db.create_all()
 
 
 # def phone_validator(num):
