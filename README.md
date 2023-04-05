@@ -1,4 +1,5 @@
-Fyyur (soojiyou)
+
+Full Stack Project 1 - Fyyur
 -----
 ## Demo Website (Render)
 https://fs-fyyur.onrender.com
