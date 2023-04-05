@@ -103,6 +103,13 @@ Overall:
 
 ## Features
 ### User
+User can:
+
+1. search Artist, Venue, Show by name.
+
+2. add Artist, Venue, and arrange Show with Artist Id, Venue Id, date.
+ 
+3. edit and delete Artist and Venue information. 
 
 mainpage
 
